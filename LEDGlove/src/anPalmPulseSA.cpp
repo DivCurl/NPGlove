@@ -22,29 +22,6 @@ int anPalmPulseSA::Draw() {
     const uint8_t palmPix = 20;
     const uint8_t fingerPix = 3;   
     
-    const coord2d_t pinkyPix [ 3 ] = {    
-        { 0, 0 },
-        { 0, 1 },
-        { 0, 2 }        
-    }; 
-    
-    const coord2d_t ringPix [ 3 ] = {    
-        { 0, 5 },
-        { 0, 4 },
-        { 0, 3 }        
-    }; 
-    
-    const coord2d_t middlePix [ 3 ] = {    
-        { 0, 6 },
-        { 0, 7 },
-        { 0, 8 }        
-    }; 
-    
-    const coord2d_t indexPix [ 3 ] = {    
-        { 0, 11 },
-        { 0, 10 },
-        { 0, 9 }        
-    }; 
     
     counter ctrMain ( 150, ON );
     
@@ -59,6 +36,9 @@ int anPalmPulseSA::Draw() {
     
     // [11, 9]
     vector<pixel> index; // array of pixel vectors for each frequency bar to be drawn
+    
+    // [12, 31]
+    vector<pixel> palm; // array of pixel vectors for each frequency bar to be drawn
     
     
     pinky.push_back( 
@@ -120,8 +100,17 @@ int anPalmPulseSA::Draw() {
             255 
         )
     );
-                
     
+    for ( int i = 0; i < 4; i++ ) {
+        palm.push_back( 
+            pixel( 
+                palmColumnPix[ i ] [ 4 ],
+                rgbwGetByAngle ( 240 ),
+                255 
+            )
+        );
+    }
+                    
     while ( ( framesDrawn < frames ) || modeFlags.test( MODE_REPEAT ) ) {        
         if ( !skip ) {                
             
@@ -132,6 +121,7 @@ int anPalmPulseSA::Draw() {
                 Blit( ring );
                 Blit( middle );
                 Blit( index );
+                Blit( palm );
             
                 RefreshDisplay( FB_CLEAR );
                 
