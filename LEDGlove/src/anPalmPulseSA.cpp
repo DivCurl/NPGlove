@@ -18,29 +18,23 @@ anPalmPulseSA::~anPalmPulseSA() {
 
 // STRICTLY FOR TESTING //
 int anPalmPulseSA::Draw() {
-    // Main animation loop   
+    counter ctrFade ( 150, ON );
+    // counter ctrMain ( 100, ON );
+    const int avgSamples = 25;
     const uint8_t palmPix = 20;
     const uint8_t fingerPix = 3;   
+    int volPeakFinger, volPeakPalm;
+    float avgVol = 0.0f;
+    float peakVol = 0.f;
     
-    
-    counter ctrMain ( 150, ON );
-    
-    // [0, 2]    
-    vector<pixel> pinky; // array of pixel vectors for each frequency bar to be drawn
-    
-    // [5, 3]
+        
+    vector<pixel> pinky; // array of pixel vectors for each frequency bar to be drawn  
     vector<pixel> ring; // array of pixel vectors for each frequency bar to be drawn
-    
-    // [6, 8]
     vector<pixel> middle; // array of pixel vectors for each frequency bar to be drawn
-    
-    // [11, 9]
     vector<pixel> index; // array of pixel vectors for each frequency bar to be drawn
-    
-    // [12, 31]
     vector<pixel> palm; // array of pixel vectors for each frequency bar to be drawn
     
-    
+    /*
     pinky.push_back( 
         pixel( 
             pinkyPix[0],
@@ -64,68 +58,119 @@ int anPalmPulseSA::Draw() {
             255 
         )
     );
+    */
     
-    // 
-    
-    ring.push_back( 
-        pixel( 
-            ringPix[0],
-            rgbwGetByAngle ( 80 ),
-            255 
-        )
-    ); 
-            
-    ring.push_back( 
-        pixel( 
-            ringPix[1],
-            rgbwGetByAngle ( 80 ),
-            255 
-        )
-    );
-    
-    //
-    
-    middle.push_back( 
-        pixel( 
-            middlePix[0],
-            rgbwGetByAngle ( 120 ),
-            255 
-        )
-    ); 
-            
-    middle.push_back( 
-        pixel( 
-            middlePix[1],
-            rgbwGetByAngle ( 120 ),
-            255 
-        )
-    );
-    
-    for ( int i = 0; i < 4; i++ ) {
-        palm.push_back( 
+    /*
+    for ( int i = 0; i < 2; i++ ) {
+        index.push_back( 
             pixel( 
-                palmColumnPix[ i ] [ 4 ],
-                rgbwGetByAngle ( 240 ),
+                indexPix[ i ],
+                rgbwGetByAngle ( 300 ),
                 255 
             )
         );
     }
+    */
                     
     while ( ( framesDrawn < frames ) || modeFlags.test( MODE_REPEAT ) ) {        
         if ( !skip ) {                
             
-            if ( ctrMain.Done() ) {
-                ctrMain.Reset();
-        
+            // if ( ctrMain.Done() ) {
+            //    ctrMain.Reset();
+                
+                avgVol = 0.f;
+                peakVol = -60.f;
+
+                if ( FFTBufferReady ) {
+                    ComputeFFT();                
+                }  
+
+                // Get average volume
+                for ( int i = 1; i <= avgSamples; ++i ) {
+                    avgVol += singleSidedFFT[ i  ];
+                    if ( singleSidedFFT[ i ] > peakVol ) {
+                        peakVol = singleSidedFFT[ i ];
+                    }
+                }
+
+                avgVol /= avgSamples;                    
+                // testAvg = avgVol;
+                // testPeak = peakVol;
+
+                // numSplats = (int) Remap ( avgVol, -60, 0, 0, 5 ) ;
+                volPeakFinger = (int) Remap ( peakVol, -55, -5, 0, 5 ) ;
+                               
+
+                // Evaluate if bars need to be resized
+                if ( volPeakFinger > 1 ) { 
+                    pinky.clear();  
+                    ring.clear();
+                    middle.clear();
+                    index.clear(); 
+                    float pinkyAngle = rand() % 360;
+                    float ringAngle = rand() % 360;
+                    float middleAngle = rand() % 360;
+                    float indexAngle = rand() % 360;
+                    for ( int i = 0; i <= volPeakFinger; i++ ) {
+                        // Add a new bar so long as we're not already max'd out
+                        if ( pinky.size() < fingerPix ) {
+                            
+                            pinky.push_back( 
+                                pixel( 
+                                    pinkyPix[ pinky.size() ],
+                                    rgbwGetByAngle ( pinkyAngle ),
+                                    255 
+                                )
+                            );
+                            
+                            ring.push_back( 
+                                pixel( 
+                                    ringPix[ ring.size() ],
+                                    rgbwGetByAngle ( ringAngle ),
+                                    255 
+                                )
+                            );
+                            
+                            middle.push_back( 
+                                pixel( 
+                                    middlePix[ middle.size() ],
+                                    rgbwGetByAngle ( middleAngle ),
+                                    255 
+                                )
+                            );
+                            
+                            index.push_back( 
+                                pixel( 
+                                    indexPix[ index.size() ],
+                                    rgbwGetByAngle ( indexAngle ),
+                                    255 
+                                )
+                            );
+                        }
+                    }
+                } else {
+                    // Pop one pixel off the top
+                    if ( ctrFade.Done() ) {
+                        ctrFade.Reset();
+                        if ( pinky.size() > 0 ) {
+                            pinky.pop_back();
+                            ring.pop_back();
+                            middle.pop_back();
+                            index.pop_back();
+                        }
+                    }
+                }
+
                 Blit( pinky );
                 Blit( ring );
                 Blit( middle );
                 Blit( index );
-                Blit( palm );
-            
+                // Blit( palm );
+                
+
                 RefreshDisplay( FB_CLEAR );
                 
-            }          
+            // }          
         } // not skipped 
     } // end main loop         
     

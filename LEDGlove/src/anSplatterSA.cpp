@@ -79,7 +79,7 @@ int anSplatterSA::Draw() {
             framesDrawn++;
         }      
         
-        RefreshDisplay();
+        RefreshDisplay( );
         
     }   // end main loop
     
