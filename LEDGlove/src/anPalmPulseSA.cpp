@@ -5,6 +5,9 @@
 extern bool analyzerRun;
 extern volatile bool FFTBufferReady;
 extern short singleSidedFFT[ N ];
+float volAvg, avgIndex, avgMiddle, avgRing, avgPinky, avgPalm;
+float peakVol, peakIndex, peakMiddle, peakRing, peakPinky, peakPalm;
+
 
 anPalmPulseSA::anPalmPulseSA( npDisplay* pDisplay, mode_t mode, int frames, opt_t opts, scale_t customScaling ) 
 : npAnimation( pDisplay, mode, frames, opts, customScaling ) { 
@@ -18,159 +21,236 @@ anPalmPulseSA::~anPalmPulseSA() {
 
 // STRICTLY FOR TESTING //
 int anPalmPulseSA::Draw() {
-    counter ctrFade ( 150, ON );
-    // counter ctrMain ( 100, ON );
-    const int avgSamples = 25;
+    int strobe = 0;    
+    counter ctrFade ( 50, ON );
+    counter ctrMain ( 10, ON );
+    counter ctrStrobe ( 30, ON );
+    // const int samples = 28; // @ 5K effective freq, 161hz / bin
     const uint8_t palmPix = 20;
-    const uint8_t fingerPix = 3;   
-    int volPeakFinger, volPeakPalm;
-    float avgVol = 0.0f;
-    float peakVol = 0.f;
-    
-        
-    vector<pixel> pinky; // array of pixel vectors for each frequency bar to be drawn  
-    vector<pixel> ring; // array of pixel vectors for each frequency bar to be drawn
-    vector<pixel> middle; // array of pixel vectors for each frequency bar to be drawn
-    vector<pixel> index; // array of pixel vectors for each frequency bar to be drawn
-    vector<pixel> palm; // array of pixel vectors for each frequency bar to be drawn
-    
-    /*
-    pinky.push_back( 
-        pixel( 
-            pinkyPix[0],
-            rgbwGetByAngle ( 0 ),
-            255 
-        )
-    ); 
+    const uint8_t fingerPix = 3; 
+    uint8_t palm_y_coords[ palmPix ];    
             
-    pinky.push_back( 
-        pixel( 
-            pinkyPix[1],
-            rgbwGetByAngle ( 0 ),
-            255 
-        )
-    );
-            
-    pinky.push_back( 
-        pixel( 
-            pinkyPix[2],
-            rgbwGetByAngle ( 0 ),
-            255 
-        )
-    );
-    */
+    vector<pixel> pinky; 
+    vector<pixel> ring; 
+    vector<pixel> middle; 
+    vector<pixel> index; 
+    vector<pixel> palm;
     
-    /*
-    for ( int i = 0; i < 2; i++ ) {
-        index.push_back( 
-            pixel( 
-                indexPix[ i ],
-                rgbwGetByAngle ( 300 ),
-                255 
-            )
-        );
+    // Init palm y-coords
+    for ( int i = 0; i < palmPix; ++i ) {
+        palm_y_coords[ i ] = i + 12;
     }
-    */
                     
     while ( ( framesDrawn < frames ) || modeFlags.test( MODE_REPEAT ) ) {        
         if ( !skip ) {                
+                        
+            if ( FFTBufferReady ) {
+                ComputeFFT();                
+            }  
+
+            if ( ctrStrobe.Done() ) {
+                ctrStrobe.Reset();
+                strobe ^= 1UL;
+            }
             
-            // if ( ctrMain.Done() ) {
-            //    ctrMain.Reset();
-                
-                avgVol = 0.f;
-                peakVol = -60.f;
-
-                if ( FFTBufferReady ) {
-                    ComputeFFT();                
-                }  
-
-                // Get average volume
-                for ( int i = 1; i <= avgSamples; ++i ) {
-                    avgVol += singleSidedFFT[ i  ];
-                    if ( singleSidedFFT[ i ] > peakVol ) {
-                        peakVol = singleSidedFFT[ i ];
-                    }
+            volAvg = 0;
+            peakVol = -60.f;
+            // Get total volume avg and peak for index
+            for ( int i = 1; i <= 7; ++i ) {
+                volAvg += singleSidedFFT[ i ];
+                if ( singleSidedFFT[ i ] > peakVol ) {
+                    peakVol = singleSidedFFT[ i ];
                 }
+            }
+            volAvg /= 7.f;         
+            avgIndex = Remap( volAvg, -55, -5, 0, 5 );
+            peakIndex = Remap( peakVol, -55, -5, 0, 5 );
 
-                avgVol /= avgSamples;                    
-                // testAvg = avgVol;
-                // testPeak = peakVol;
+            volAvg = 0;
+            peakVol = -60.f;
+            // Get total volume avg and peak for middle
+            for ( int i = 8; i <= 15; ++i ) {
+                volAvg += singleSidedFFT[ i ];
+                if ( singleSidedFFT[ i ] > peakVol ) {
+                    peakVol = singleSidedFFT[ i ];
+                }
+            }
+            volAvg /= 7.f;        
+            avgMiddle = Remap( volAvg, -55, -5, 0, 5 );
+            peakMiddle = Remap( peakVol, -55, -5, 0, 5 );
 
-                // numSplats = (int) Remap ( avgVol, -60, 0, 0, 5 ) ;
-                volPeakFinger = (int) Remap ( peakVol, -55, -5, 0, 5 ) ;
-                               
+            volAvg = 0;
+            peakVol = -60.f;
+            // Get total volume avg and peak for ring
+            for ( int i = 15; i <= 21; ++i ) {
+                volAvg += singleSidedFFT[ i ];
+                if ( singleSidedFFT[ i ] > peakVol ) {
+                    peakVol = singleSidedFFT[ i ];
+                }
+            }
+            volAvg /= 7.f;       
+            avgRing = Remap( volAvg, -55, -5, 0, 5 );
+            peakRing = Remap( peakVol, -55, -5, 0, 5 );
 
-                // Evaluate if bars need to be resized
-                if ( volPeakFinger > 1 ) { 
-                    pinky.clear();  
-                    ring.clear();
-                    middle.clear();
-                    index.clear(); 
-                    float pinkyAngle = rand() % 360;
-                    float ringAngle = rand() % 360;
-                    float middleAngle = rand() % 360;
-                    float indexAngle = rand() % 360;
-                    for ( int i = 0; i <= volPeakFinger; i++ ) {
+            volAvg = 0;
+            peakVol = -60.f;
+            // Get total volume avg and peak for pinky
+            for ( int i = 22; i <= 28; ++i ) {
+                volAvg += singleSidedFFT[ i ];
+                if ( singleSidedFFT[ i ] > peakVol ) {
+                    peakVol = singleSidedFFT[ i ];
+                }
+            }
+            volAvg /= 7.f;     
+            avgPinky = Remap( volAvg, -55, -5, 0, 5 );
+            peakPinky = Remap( peakVol, -55, -5, 0, 5 );
+            
+            volAvg = 0;
+            peakVol = -60.f;
+            // Get total volume avg and peak for palm
+            for ( int i = 1; i <= 28; ++i ) {
+                volAvg += singleSidedFFT[ i ];
+                if ( singleSidedFFT[ i ] > peakVol ) {
+                    peakVol = singleSidedFFT[ i ];
+                }
+            }
+            volAvg /= 28.f;     
+            avgPalm = Remap( volAvg, -55, -5, 0, 20 );
+            peakPalm = Remap( peakVol, -55, -5, 0, 20 );
+            
+            // Drop the peaks by one
+            if ( ctrFade.Done() ) {
+                ctrFade.Reset();
+
+                if ( index.size() > 0 ) {
+                    index.pop_back();            
+                }
+                if ( middle.size() > 0 ) {
+                    middle.pop_back();            
+                }
+                if ( ring.size() > 0 ) {
+                    ring.pop_back();            
+                }
+                if ( pinky.size() > 0 ) {
+                    pinky.pop_back();            
+                }                
+                if ( palm.size() > 0 ) {
+                    palm.pop_back();            
+                }
+            }            
+            
+            if ( ctrMain.Done() ) { 
+                ctrMain.Reset();       
+                
+                if ( peakIndex > 1 ) { 
+                    index.clear();                
+                    angle = rand() % 360;
+                    
+                    for ( int i = 0; i <= peakIndex; i++ ) {
                         // Add a new bar so long as we're not already max'd out
-                        if ( pinky.size() < fingerPix ) {
-                            
-                            pinky.push_back( 
-                                pixel( 
-                                    pinkyPix[ pinky.size() ],
-                                    rgbwGetByAngle ( pinkyAngle ),
-                                    255 
-                                )
-                            );
-                            
-                            ring.push_back( 
-                                pixel( 
-                                    ringPix[ ring.size() ],
-                                    rgbwGetByAngle ( ringAngle ),
-                                    255 
-                                )
-                            );
-                            
-                            middle.push_back( 
-                                pixel( 
-                                    middlePix[ middle.size() ],
-                                    rgbwGetByAngle ( middleAngle ),
-                                    255 
-                                )
-                            );
-                            
+                        if ( index.size() < fingerPix ) {
                             index.push_back( 
                                 pixel( 
                                     indexPix[ index.size() ],
-                                    rgbwGetByAngle ( indexAngle ),
+                                    rgbwGetByAngle ( angle ),
                                     255 
                                 )
-                            );
-                        }
-                    }
-                } else {
-                    // Pop one pixel off the top
-                    if ( ctrFade.Done() ) {
-                        ctrFade.Reset();
-                        if ( pinky.size() > 0 ) {
-                            pinky.pop_back();
-                            ring.pop_back();
-                            middle.pop_back();
-                            index.pop_back();
+                            );                            
                         }
                     }
                 }
-
+                
+                if ( peakMiddle > 1 ) { 
+                    middle.clear();                     
+                    angle = rand() % 360;
+                    
+                    for ( int i = 0; i <= peakMiddle; i++ ) {
+                        // Add a new bar so long as we're not already max'd out
+                        if ( middle.size() < fingerPix ) {
+                            middle.push_back( 
+                                pixel( 
+                                    middlePix[ middle.size() ],
+                                    rgbwGetByAngle ( angle ),
+                                    255 
+                                )
+                            );                            
+                        }
+                    }
+                }
+                
+                if ( peakRing > 1 ) { 
+                    ring.clear();                     
+                    angle = rand() % 360;
+                    
+                    for ( int i = 0; i <= peakRing; i++ ) {
+                        // Add a new bar so long as we're not already max'd out
+                        if ( ring.size() < fingerPix ) {
+                            ring.push_back( 
+                                pixel( 
+                                    ringPix[ ring.size() ],
+                                    rgbwGetByAngle ( angle ),
+                                    255 
+                                )
+                            );                            
+                        }
+                    }
+                }
+                
+                if ( peakPinky > 1 ) { 
+                    pinky.clear();                     
+                    angle = rand() % 360;
+                    
+                    for ( int i = 0; i <= peakPinky; i++ ) {
+                        // Add a new bar so long as we're not already max'd out
+                        if ( pinky.size() < fingerPix ) {
+                            pinky.push_back( 
+                                pixel( 
+                                    pinkyPix[ pinky.size() ],
+                                    rgbwGetByAngle ( angle ),
+                                    255 
+                                )
+                            );                            
+                        }
+                    }
+                }
+                
+                if ( peakPalm > 1 ) { 
+                    palm.clear();         
+                    
+                    // Shuffle up the coords to make things interesting
+                    for ( int i = 0; i < peakPalm; i++ ) {
+                        int rnd = rand() % 20;
+                        int tmp = palm_y_coords[ i ];
+                        palm_y_coords[ i ] = palm_y_coords[ rnd ];
+                        palm_y_coords[ rnd ] = tmp;                        
+                    }
+                    
+                    for ( int i = 0; i <= peakPalm; i++ ) {
+                        // Add a new bar so long as we're not already max'd out
+                        if ( palm.size() < palmPix ) {
+                            palm.push_back( 
+                                pixel( 
+                                    // palmPix[ palm.size() ],
+                                    coord2d_t { 0, palm_y_coords[ i ] },
+                                    rgbwGetByAngle ( rand() % 360, rand() % 30 ),
+                                    255 
+                                )
+                            );                            
+                        }
+                    }
+                }
+            }
+           
+            if ( !strobe ) {
                 Blit( pinky );
                 Blit( ring );
                 Blit( middle );
                 Blit( index );
-                // Blit( palm );
-                
+                Blit( palm );                
+            }
 
-                RefreshDisplay( FB_CLEAR );
-                
-            // }          
+            RefreshDisplay( FB_CLEAR );
+                  
         } // not skipped 
     } // end main loop         
     

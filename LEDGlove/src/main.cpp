@@ -65,6 +65,7 @@ int main() {
         
         // currAnim = ID_AN_SPLATTER_SA; // works
         currAnim = ID_AN_PALM_PULSE_SA;
+        // currAnim = ID_AN_PALM_STROBE;
         
         switch ( currAnim ) {  
             
