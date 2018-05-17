@@ -39,12 +39,12 @@ int main() {
     // CloseTimer4();
     OpenTimer4( T4_ON | T4_SOURCE_INT | T4_PS_1_1, T4Period );  
     ConfigIntTimer4( T4_INT_ON | T4_INT_PRIOR_7 ); 
-    // ANSELA = 0;
-    // ANSELB = 0;
+    ANSELA = 0;
+    ANSELB = 0;
     // Set PORTB tristate pin modes
     TRISBbits.TRISB2 = 0;       // Neopixel data pin 
-    TRISBbits.TRISB3 = 1;       // Input pin    
-    TRISBbits.TRISB15 = 1;       // Input pin    
+    TRISBbits.TRISB3 = 1;       // Input pin (animation switch PB)
+    TRISBbits.TRISB15 = 1;      // Analog Input pin    
             
     npAnimation* pAnim;
     npDisplay display( RGBW );   
@@ -54,6 +54,10 @@ int main() {
     srand( ReadADC10( 0 ) ); 
 
     int currAnim = 1;
+    
+    // currAnim = ID_AN_PALM_STROBE;        
+        currAnim = ID_AN_SPLATTER_SA; // works
+    // currAnim = ID_AN_PALM_PULSE_SA;  // Works
 
     while ( 1 ) { 
         if ( currAnim == ID_AN_NULL ) {
@@ -62,10 +66,6 @@ int main() {
         else if ( currAnim >= ID_AN_MAX ) {
             currAnim = 1;
         }
-        
-        // currAnim = ID_AN_SPLATTER_SA; // works
-        currAnim = ID_AN_PALM_PULSE_SA;
-        // currAnim = ID_AN_PALM_STROBE;
         
         switch ( currAnim ) {  
             
@@ -95,19 +95,6 @@ int main() {
                 delete pAnim;
                 break;
                 
-            case ( ID_AN_SPLATTER_SA ):
-                pAnim = new anSplatterSA( &display, MODE_REPEAT );
-                
-                if ( pAnim->Draw() == MODE_PREV ) {
-                    currAnim--;
-                } 
-                else if ( pAnim->Draw() == MODE_NEXT ) {
-                    currAnim++;
-                }
-                
-                delete pAnim;
-                break;
-                
             case ( ID_AN_PALM_PULSE_SA ):
                 pAnim = new anPalmPulseSA( &display, MODE_REPEAT );
                 
@@ -120,6 +107,20 @@ int main() {
                 
                 delete pAnim;
                 break;
+                
+            case ( ID_AN_SPLATTER_SA ):
+                pAnim = new anSplatterSA( &display, MODE_REPEAT );
+                
+                if ( pAnim->Draw() == MODE_PREV ) {
+                    currAnim--;
+                } 
+                else if ( pAnim->Draw() == MODE_NEXT ) {
+                    currAnim++;
+                }
+                
+                delete pAnim;
+                break;
+                            
             
             default : 
                 currAnim++;

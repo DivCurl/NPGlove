@@ -26,17 +26,13 @@ int anSplatterSA::Draw() {
     float peakVol = 0.f;
     
     while ( ( framesDrawn < frames ) || modeFlags.test( MODE_REPEAT ) ) {
-        if ( globalMode.msgPending ) { 
-            PollGlobalModes();  // handle any new external I/O messages
-        }                
-        
-        if ( modeFlags.test( MODE_OFF ) ) {
-            Clr();
-        }        
-        
+        if ( CheckAnimSwitch() ) {
+            return ( MODE_NEXT );
+        }
+                        
         if ( ret == MODE_PREV || ret == MODE_NEXT ) {
-            return ( ret );  // break while loop and return to main signaling next/prev animation to be drawn
-        }     
+            break;  // break while loop and return to main signaling next/prev animation to be drawn
+        }                            
            
         if ( !skip ) { 
             int numSplats;
@@ -66,7 +62,7 @@ int anSplatterSA::Draw() {
             // testPeak = peakVol;
             
             // numSplats = (int) Remap ( avgVol, -60, 0, 0, 5 ) ;
-            numSplats = (int) Remap ( peakVol, -45, 0, 0, 5 ) ;
+            numSplats = (int) Remap ( peakVol, -55, -5, 0, 6 ) ;
 
             if ( numSplats > 0 ) {
                 // randomize where they go and draw them

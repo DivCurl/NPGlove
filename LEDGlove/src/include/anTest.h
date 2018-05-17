@@ -12,8 +12,7 @@ public:
     int Draw();
         
 private:
-    hsv_t h_color;
-    sprite index, middle, ring, pinky, palm;    
+    hsv_t h_color;    
     float angle;    
     int step;       
 };

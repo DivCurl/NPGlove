@@ -251,10 +251,10 @@ void npDisplay::Refresh( int mode ) {
     INTDisableInterrupts();
     for ( int i = 0; i < refreshPulses; i++ ) {      
         LATBSET = pins;
-        delay_1();          // t0 = .3us          
+        delay_t1();          // t0 = .3us          
         LATBCLR = t1LUT[ i ]; 
-        delay_2();          // t1 = .3us        
-        delay_3();          // t2 = .6us
+        delay_t1();          // t1 = .3us        
+        delay_t2();          // t2 = .6us
         LATBCLR = pins;
     }       
     INTEnableInterrupts();  

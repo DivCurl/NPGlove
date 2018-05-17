@@ -42,7 +42,15 @@ int anPalmPulseSA::Draw() {
     }
                     
     while ( ( framesDrawn < frames ) || modeFlags.test( MODE_REPEAT ) ) {        
-        if ( !skip ) {                
+        if ( CheckAnimSwitch() ) {
+            return ( MODE_NEXT );
+        }
+                        
+        if ( ret == MODE_PREV || ret == MODE_NEXT ) {
+            break;  // break while loop and return to main signaling next/prev animation to be drawn
+        }    
+        
+        if ( !skip ) {                          
                         
             if ( FFTBufferReady ) {
                 ComputeFFT();                

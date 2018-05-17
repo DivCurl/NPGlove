@@ -39,90 +39,96 @@ int anPalmStrobe::Draw() {
     // RefreshDisplay( FB_CLEAR );
     
     
-    while ( ( framesDrawn < frames ) || modeFlags.test( MODE_REPEAT ) ) {        
-        if ( !skip ) {                
+    while ( ( framesDrawn < frames ) || modeFlags.test( MODE_REPEAT ) ) {                      
+        if ( CheckAnimSwitch() ) {
+            return ( MODE_NEXT );
+        }
+                        
+        if ( ret == MODE_PREV || ret == MODE_NEXT ) {
+            break;  // break while loop and return to main signaling next/prev animation to be drawn
+        }  
 
-            if ( ctrFingers.Done() ) {        
-                ctrFingers.Reset();
-                
-                shiftCount++;
-                
-                if ( shiftCount > 3 ) {                       
-                    pinky.coord = { 0, 0 };
-                    ring.coord =  { 0, 5 };
-                    middle.coord = { 0, 6 };
-                    index.coord = { 0, 11 };
-                    
-                    // Fingers
-                    Set( pinky.coord.x, pinky.coord.y, rgbwGetByAngle( angle1 ));
-                    Set( ring.coord.x, ring.coord.y, rgbwGetByAngle( angle1 + 30 ) );
-                    Set( middle.coord.x, middle.coord.y, rgbwGetByAngle( angle1 + 60 ) );
-                    Set( index.coord.x, index.coord.y, rgbwGetByAngle( angle1 + 90 ) );                    
-                    shiftCount = 0;
-                } 
-                
-                if ( (shiftCount > 0) && (shiftCount < 3) ) {
-                    pinky.Shift( 0, 1 );
-                    ring.Shift( 0, -1 );
-                    middle.Shift( 0, 1 );
-                    index.Shift( 0, -1 );                                
-                    // Fingers
-                    Set( pinky.coord.x, pinky.coord.y, rgbwGetByAngle( angle1 ));
-                    Set( ring.coord.x, ring.coord.y, rgbwGetByAngle( angle1 + 30 ) );
-                    Set( middle.coord.x, middle.coord.y, rgbwGetByAngle( angle1 + 60 ) );
-                    Set( index.coord.x, index.coord.y, rgbwGetByAngle( angle1 + 90 ) );
-                }
-                
-                if ( shiftCount == 3 ) {
-                    Set( pinky.coord.x, pinky.coord.y, rgbw_t {0, 0, 0, 0} );
-                    Set( ring.coord.x, ring.coord.y, rgbw_t {0, 0, 0, 0} );
-                    Set( middle.coord.x, middle.coord.y, rgbw_t {0, 0, 0, 0} );
-                    Set( index.coord.x, index.coord.y, rgbw_t {0, 0, 0, 0} );                    
-                }
-                                                                
-                RefreshDisplay( FB_CLEAR );                
-            }
-            
+        if ( ctrFingers.Done() ) {        
+            ctrFingers.Reset();
 
-            if ( ctrFingerFade.Done() ) {
-                ctrFingerFade.Reset();
-                if ( ( angle1 += 5.0f )  > 360 ) { 
-                    angle1 -= 360;
-                    
-                    // RefreshDisplay( FB_CLEAR );
-                }
-            }
-            
-            if ( ctrPalmFade.Done() ) {
-                ctrPalmFade.Reset();
-                if ( ( angle2 += 1.0f ) > 360 ) { 
-                    angle2 -= 360;
-                    
-                   // RefreshDisplay( FB_CLEAR );
-                }
-            }
-            
-            if ( ctrPalmBlink.Done() ) {
-                ctrPalmBlink.Reset();
-                if ( palmBlink ) {
-                    for ( int i = 0; i < palmPixels; i++ ) {
-                        Set( palm[i].coord.x, palm[i].coord.y, rgbw_t { 0, 0, 0, 0 } );
-                    }
-                    palmBlink = 0;
-                } 
-                
-                else {
-                    for ( int i = 0; i < palmPixels; i++ ) {
-                        Set( palm[i].coord.x, palm[i].coord.y, rgbwGetByAngle( angle2 + (i*4) ) );
-                    }
-                    palmBlink = 1;
-                }
-                
-                RefreshDisplay( FB_BLEND );                                
+            shiftCount++;
+
+            if ( shiftCount > 3 ) {                       
+                pinky.coord = { 0, 0 };
+                ring.coord =  { 0, 5 };
+                middle.coord = { 0, 6 };
+                index.coord = { 0, 11 };
+
+                // Fingers
+                Set( pinky.coord.x, pinky.coord.y, rgbwGetByAngle( angle1 ));
+                Set( ring.coord.x, ring.coord.y, rgbwGetByAngle( angle1 + 30 ) );
+                Set( middle.coord.x, middle.coord.y, rgbwGetByAngle( angle1 + 60 ) );
+                Set( index.coord.x, index.coord.y, rgbwGetByAngle( angle1 + 90 ) );                    
+                shiftCount = 0;
             } 
+
+            if ( (shiftCount > 0) && (shiftCount < 3) ) {
+                pinky.Shift( 0, 1 );
+                ring.Shift( 0, -1 );
+                middle.Shift( 0, 1 );
+                index.Shift( 0, -1 );                                
+                // Fingers
+                Set( pinky.coord.x, pinky.coord.y, rgbwGetByAngle( angle1 ));
+                Set( ring.coord.x, ring.coord.y, rgbwGetByAngle( angle1 + 30 ) );
+                Set( middle.coord.x, middle.coord.y, rgbwGetByAngle( angle1 + 60 ) );
+                Set( index.coord.x, index.coord.y, rgbwGetByAngle( angle1 + 90 ) );
+            }
+
+            if ( shiftCount == 3 ) {
+                Set( pinky.coord.x, pinky.coord.y, rgbw_t {0, 0, 0, 0} );
+                Set( ring.coord.x, ring.coord.y, rgbw_t {0, 0, 0, 0} );
+                Set( middle.coord.x, middle.coord.y, rgbw_t {0, 0, 0, 0} );
+                Set( index.coord.x, index.coord.y, rgbw_t {0, 0, 0, 0} );                    
+            }
+
+            RefreshDisplay( FB_CLEAR );                
+        }
+
+
+        if ( ctrFingerFade.Done() ) {
+            ctrFingerFade.Reset();
+            if ( ( angle1 += 5.0f )  > 360 ) { 
+                angle1 -= 360;
+
+                // RefreshDisplay( FB_CLEAR );
+            }
+        }
+
+        if ( ctrPalmFade.Done() ) {
+            ctrPalmFade.Reset();
+            if ( ( angle2 += 1.0f ) > 360 ) { 
+                angle2 -= 360;
+
+               // RefreshDisplay( FB_CLEAR );
+            }
+        }
+
+        if ( ctrPalmBlink.Done() ) {
+            ctrPalmBlink.Reset();
+            if ( palmBlink ) {
+                for ( int i = 0; i < palmPixels; i++ ) {
+                    Set( palm[i].coord.x, palm[i].coord.y, rgbw_t { 0, 0, 0, 0 } );
+                }
+                palmBlink = 0;
+            } 
+
+            else {
+                for ( int i = 0; i < palmPixels; i++ ) {
+                    Set( palm[i].coord.x, palm[i].coord.y, rgbwGetByAngle( angle2 + (i*4) ) );
+                }
+                palmBlink = 1;
+            }
+
+            RefreshDisplay( FB_BLEND );                                
+        } 
             
             
-        } // not skipped 
+
     } // end main loop         
     
     return ( MODE_NEXT );

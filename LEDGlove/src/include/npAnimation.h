@@ -71,6 +71,7 @@ public:
     void FadeOut( int fadeMode = 0, int numSteps = 1, uint16_t minBrt = 0 );
     void SetMode( mode_t mode );
     void ClrMode( mode_t mode );
+    bool CheckAnimSwitch( void );
     void StartDelayCounter( uint16_t delay );  // Get rid of this
     int PollGlobalModes();
     void UpdateLCD();
@@ -80,12 +81,14 @@ public:
     int GetID();
 
 protected:
+    counter ctrDebounce;
     rgbw_t globalColor;
     uint32_t frames, framesDrawn;
     uint32_t cycles, cyclesDrawn;
     // float fadeRate;
     float dbGain = 25.f;    // good starting point
-    int id, ret;    // return code from Draw()
+    int id;    // return code from Draw()
+    int ret;
     bool skip, firstScan, useGlobalColor = 0;
     scale_t customScale;
     coord2d_t xyScale = { 1, 1 };
@@ -93,6 +96,9 @@ protected:
     bitset<16> optFlags;
     counter ctrDelay;           // Get rid of this at some point
     npDisplay* pDisplay;
+    int pbState = 0;
+    int dbCtr = 0;
+    int modeOneShot = 0;
 };
 
 #endif

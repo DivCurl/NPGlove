@@ -21,6 +21,7 @@ npAnimation::npAnimation( npDisplay* pDisplay, mode_t mode, int frames, opt_t op
         ret = MODE_NULL;   
         SetScaling();
         Clr();
+        ctrDebounce.SetDelay( 2000 );
 }
 
 npAnimation::~npAnimation() { }
@@ -61,6 +62,46 @@ void npAnimation::SetMode( mode_t mode ) {
 
 void npAnimation::ClrMode( mode_t mode ) {
     modeFlags.reset( mode );
+}
+
+bool npAnimation::CheckAnimSwitch( void ) {
+    if ( !PORTBbits.RB3 ) {    
+        ctrDebounce.Start();
+    } else {
+        ctrDebounce.Stop();
+    }
+    
+    if ( ctrDebounce.Done() ) {
+        return ( 1 );
+    }
+            
+    /*
+    if ( !pbState && !PORTBbits.RB3 ) {    
+        // Nop();
+        if ( dbCtr < 20 ) {
+            dbCtr++;
+        } else {                
+            pbState = 1;
+            modeOneShot = 1;
+        }
+    }        
+     // resets pushbutton state to ensure clean transition between presses
+    if ( pbState && PORTBbits.RB3 ) {
+        if ( dbCtr > 0 ) {
+            dbCtr--;
+        } else {
+            pbState = 0;
+        }
+    }               
+    if ( pbState && modeOneShot ) {
+        skip = 1;
+        ret = MODE_NEXT;
+        modeOneShot = 0;
+    } 
+    */
+    
+    return ( 0 );
+    
 }
 
 void npAnimation::StartDelayCounter( uint16_t delay ) {

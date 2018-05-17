@@ -12,18 +12,22 @@
 #ifdef __OPTIMIZE__
     // #define delay_t1(); { asm volatile( "nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n" ); }
     // #define delay_t2(); { asm volatile( "nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n" ); }
-    #define delay_1(); { asm volatile( "nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n" ); }
-    #define delay_2(); { asm volatile( "nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n" ); }
-    #define delay_3(); { asm volatile( "nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n" ); }
+    #define delay_t1(); { asm volatile( "nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n" ); }
+    // #define delay_2(); { asm volatile( "nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n" ); }
+    #define delay_t2(); { asm volatile( "nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n" ); }
 #else
     #define delay_t1(); { asm volatile( "nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n" ); }    
     #define delay_t2(); { asm volatile( "nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n nop\n" ); }
 #endif
 
+/*
 const int MAX_THETA_DIV = 64;
-// const int MAX_VIRTUAL_HALF_ARCS = MAX_THETA_DIV / 2;
 const int BYTES_PER_ARC = 17 * 4; // 17 pixels/arc * 4 LEDs/pixel * 1 bytes/LED
 const int FB_SIZE = MAX_THETA_DIV * BYTES_PER_ARC;
+*/
+
+const int FB_SIZE = 32 * 4;
+// #define FB_SIZE 128
 
 const uint8_t MIN_BRT = 0;
 const uint8_t MAX_BRT = 255;
