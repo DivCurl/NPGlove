@@ -9,9 +9,12 @@ rgbw_t rgbwGetByAngle( float angle, uint8_t whiteTemp ) {
     
     uint8_t r, g, b;
     // double angle = fmod( inAngle, 360 );
+    /*
     while ( angle >= 360.0f ) {
         angle -= 360.0f;
     }
+    */
+    angle = fmodf( angle, 360 );
     // 0 deg = 255, 0 0
     // 60 deg = 255, 255, 0
     // 120 deg = 0, 255, 0

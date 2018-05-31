@@ -3,21 +3,16 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/P:/MPLAB/NPGlove/LEDGlove/src/include/anTest.h</file>
-            <file>file:/P:/MPLAB/NPGlove/LEDGlove/src/include/npAnimation.h</file>
-            <file>file:/P:/MPLAB/NPGlove/LEDGlove/src/include/sprite.h</file>
-            <file>file:/P:/MPLAB/NPGlove/LEDGlove/src/include/counter.h</file>
-            <file>file:/P:/MPLAB/NPGlove/LEDGlove/src/counter.cpp</file>
-            <file>file:/P:/MPLAB/NPGlove/LEDGlove/src/include/npDisplay.h</file>
-            <file>file:/P:/MPLAB/NPGlove/LEDGlove/src/npDisplay.cpp</file>
-            <file>file:/P:/MPLAB/NPGlove/LEDGlove/src/Neopixel.cpp</file>
-            <file>file:/P:/MPLAB/NPGlove/LEDGlove/src/include/types.h</file>
+            <file>file:/P:/MPLAB/NPGlove/LEDGlove/src/include/anSplatterSA.h</file>
             <file>file:/P:/MPLAB/NPGlove/LEDGlove/src/anSplatterSA.cpp</file>
-            <file>file:/P:/MPLAB/NPGlove/LEDGlove/src/npAnimation.cpp</file>
             <file>file:/P:/MPLAB/NPGlove/LEDGlove/src/anPalmStrobe.cpp</file>
             <file>file:/P:/MPLAB/NPGlove/LEDGlove/src/anPalmPulseSA.cpp</file>
-            <file>file:/P:/MPLAB/NPGlove/LEDGlove/src/anTest.cpp</file>
-            <file>file:/P:/MPLAB/NPGlove/LEDGlove/src/include/Neopixel.h</file>
+            <file>file:/P:/MPLAB/NPGlove/LEDGlove/src/counter.cpp</file>
+            <file>file:/P:/MPLAB/NPGlove/LEDGlove/src/include/anVariablePulseSA.h</file>
+            <file>file:/P:/MPLAB/NPGlove/LEDGlove/src/include/anPalmStrobe.h</file>
+            <file>file:/P:/MPLAB/NPGlove/LEDGlove/src/anVariablePulseSA.cpp</file>
+            <file>file:/P:/MPLAB/NPGlove/LEDGlove/src/anPalmPulseNoStrobeSA.cpp</file>
+            <file>file:/P:/MPLAB/NPGlove/LEDGlove/src/include/types.h</file>
             <file>file:/P:/MPLAB/NPGlove/LEDGlove/src/include/main.h</file>
             <file>file:/P:/MPLAB/NPGlove/LEDGlove/src/main.cpp</file>
         </group>

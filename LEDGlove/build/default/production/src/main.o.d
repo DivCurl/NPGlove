@@ -14,4 +14,6 @@ src/./include/fft.h  \
  src/./include/anTest.h  \
 src/./include/anPalmStrobe.h  \
  src/./include/anPalmPulseSA.h  \
-src/./include/anSplatterSA.h 
+src/./include/anPalmPulseNoStrobeSA.h  \
+ src/./include/anSplatterSA.h  \
+src/./include/anVariablePulseSA.h 

@@ -156,8 +156,10 @@ enum {
     ID_AN_TEST = -1, 
     ID_AN_NULL, 
     ID_AN_PALM_STROBE,
-    ID_AN_PALM_PULSE_SA,
+    ID_AN_PALM_PULSE_NO_STROBE_SA,
+    ID_AN_PALM_PULSE_SA,    
     ID_AN_SPLATTER_SA,
+    ID_AN_VAR_PULSE_SA,
     ID_AN_MAX 
 };
 

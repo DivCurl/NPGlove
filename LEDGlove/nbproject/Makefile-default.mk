@@ -57,17 +57,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=src/anSplatterSA.cpp src/counter.cpp src/fft.cpp src/io.cpp src/main.cpp src/Neopixel.cpp src/npAnimation.cpp src/npDisplay.cpp src/rgbColor.cpp src/anTest.cpp src/pixel.cpp src/anPalmStrobe.cpp src/anPalmPulseSA.cpp
+SOURCEFILES_QUOTED_IF_SPACED=src/anSplatterSA.cpp src/counter.cpp src/fft.cpp src/io.cpp src/main.cpp src/Neopixel.cpp src/npAnimation.cpp src/npDisplay.cpp src/rgbColor.cpp src/anTest.cpp src/pixel.cpp src/anPalmStrobe.cpp src/anPalmPulseSA.cpp src/anPalmPulseNoStrobeSA.cpp src/anVariablePulseSA.cpp
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/src/anSplatterSA.o ${OBJECTDIR}/src/counter.o ${OBJECTDIR}/src/fft.o ${OBJECTDIR}/src/io.o ${OBJECTDIR}/src/main.o ${OBJECTDIR}/src/Neopixel.o ${OBJECTDIR}/src/npAnimation.o ${OBJECTDIR}/src/npDisplay.o ${OBJECTDIR}/src/rgbColor.o ${OBJECTDIR}/src/anTest.o ${OBJECTDIR}/src/pixel.o ${OBJECTDIR}/src/anPalmStrobe.o ${OBJECTDIR}/src/anPalmPulseSA.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/src/anSplatterSA.o.d ${OBJECTDIR}/src/counter.o.d ${OBJECTDIR}/src/fft.o.d ${OBJECTDIR}/src/io.o.d ${OBJECTDIR}/src/main.o.d ${OBJECTDIR}/src/Neopixel.o.d ${OBJECTDIR}/src/npAnimation.o.d ${OBJECTDIR}/src/npDisplay.o.d ${OBJECTDIR}/src/rgbColor.o.d ${OBJECTDIR}/src/anTest.o.d ${OBJECTDIR}/src/pixel.o.d ${OBJECTDIR}/src/anPalmStrobe.o.d ${OBJECTDIR}/src/anPalmPulseSA.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/src/anSplatterSA.o ${OBJECTDIR}/src/counter.o ${OBJECTDIR}/src/fft.o ${OBJECTDIR}/src/io.o ${OBJECTDIR}/src/main.o ${OBJECTDIR}/src/Neopixel.o ${OBJECTDIR}/src/npAnimation.o ${OBJECTDIR}/src/npDisplay.o ${OBJECTDIR}/src/rgbColor.o ${OBJECTDIR}/src/anTest.o ${OBJECTDIR}/src/pixel.o ${OBJECTDIR}/src/anPalmStrobe.o ${OBJECTDIR}/src/anPalmPulseSA.o ${OBJECTDIR}/src/anPalmPulseNoStrobeSA.o ${OBJECTDIR}/src/anVariablePulseSA.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/src/anSplatterSA.o.d ${OBJECTDIR}/src/counter.o.d ${OBJECTDIR}/src/fft.o.d ${OBJECTDIR}/src/io.o.d ${OBJECTDIR}/src/main.o.d ${OBJECTDIR}/src/Neopixel.o.d ${OBJECTDIR}/src/npAnimation.o.d ${OBJECTDIR}/src/npDisplay.o.d ${OBJECTDIR}/src/rgbColor.o.d ${OBJECTDIR}/src/anTest.o.d ${OBJECTDIR}/src/pixel.o.d ${OBJECTDIR}/src/anPalmStrobe.o.d ${OBJECTDIR}/src/anPalmPulseSA.o.d ${OBJECTDIR}/src/anPalmPulseNoStrobeSA.o.d ${OBJECTDIR}/src/anVariablePulseSA.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/src/anSplatterSA.o ${OBJECTDIR}/src/counter.o ${OBJECTDIR}/src/fft.o ${OBJECTDIR}/src/io.o ${OBJECTDIR}/src/main.o ${OBJECTDIR}/src/Neopixel.o ${OBJECTDIR}/src/npAnimation.o ${OBJECTDIR}/src/npDisplay.o ${OBJECTDIR}/src/rgbColor.o ${OBJECTDIR}/src/anTest.o ${OBJECTDIR}/src/pixel.o ${OBJECTDIR}/src/anPalmStrobe.o ${OBJECTDIR}/src/anPalmPulseSA.o
+OBJECTFILES=${OBJECTDIR}/src/anSplatterSA.o ${OBJECTDIR}/src/counter.o ${OBJECTDIR}/src/fft.o ${OBJECTDIR}/src/io.o ${OBJECTDIR}/src/main.o ${OBJECTDIR}/src/Neopixel.o ${OBJECTDIR}/src/npAnimation.o ${OBJECTDIR}/src/npDisplay.o ${OBJECTDIR}/src/rgbColor.o ${OBJECTDIR}/src/anTest.o ${OBJECTDIR}/src/pixel.o ${OBJECTDIR}/src/anPalmStrobe.o ${OBJECTDIR}/src/anPalmPulseSA.o ${OBJECTDIR}/src/anPalmPulseNoStrobeSA.o ${OBJECTDIR}/src/anVariablePulseSA.o
 
 # Source Files
-SOURCEFILES=src/anSplatterSA.cpp src/counter.cpp src/fft.cpp src/io.cpp src/main.cpp src/Neopixel.cpp src/npAnimation.cpp src/npDisplay.cpp src/rgbColor.cpp src/anTest.cpp src/pixel.cpp src/anPalmStrobe.cpp src/anPalmPulseSA.cpp
+SOURCEFILES=src/anSplatterSA.cpp src/counter.cpp src/fft.cpp src/io.cpp src/main.cpp src/Neopixel.cpp src/npAnimation.cpp src/npDisplay.cpp src/rgbColor.cpp src/anTest.cpp src/pixel.cpp src/anPalmStrobe.cpp src/anPalmPulseSA.cpp src/anPalmPulseNoStrobeSA.cpp src/anVariablePulseSA.cpp
 
 
 CFLAGS=
@@ -190,6 +190,18 @@ ${OBJECTDIR}/src/anPalmPulseSA.o: src/anPalmPulseSA.cpp  nbproject/Makefile-${CN
 	@${RM} ${OBJECTDIR}/src/anPalmPulseSA.o 
 	@${FIXDEPS} "${OBJECTDIR}/src/anPalmPulseSA.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -DPICkit3PlatformTool=1  -fframe-base-loclist  -x c++ -c -mprocessor=$(MP_PROCESSOR_OPTION)  -frtti -fexceptions -fno-check-new -fno-enforce-eh-specs -O1 -MMD -MF "${OBJECTDIR}/src/anPalmPulseSA.o.d" -o ${OBJECTDIR}/src/anPalmPulseSA.o src/anPalmPulseSA.cpp   -DXPRJ_default=$(CND_CONF)  $(COMPARISON_BUILD) 
 	
+${OBJECTDIR}/src/anPalmPulseNoStrobeSA.o: src/anPalmPulseNoStrobeSA.cpp  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/src" 
+	@${RM} ${OBJECTDIR}/src/anPalmPulseNoStrobeSA.o.d 
+	@${RM} ${OBJECTDIR}/src/anPalmPulseNoStrobeSA.o 
+	@${FIXDEPS} "${OBJECTDIR}/src/anPalmPulseNoStrobeSA.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -DPICkit3PlatformTool=1  -fframe-base-loclist  -x c++ -c -mprocessor=$(MP_PROCESSOR_OPTION)  -frtti -fexceptions -fno-check-new -fno-enforce-eh-specs -O1 -MMD -MF "${OBJECTDIR}/src/anPalmPulseNoStrobeSA.o.d" -o ${OBJECTDIR}/src/anPalmPulseNoStrobeSA.o src/anPalmPulseNoStrobeSA.cpp   -DXPRJ_default=$(CND_CONF)  $(COMPARISON_BUILD) 
+	
+${OBJECTDIR}/src/anVariablePulseSA.o: src/anVariablePulseSA.cpp  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/src" 
+	@${RM} ${OBJECTDIR}/src/anVariablePulseSA.o.d 
+	@${RM} ${OBJECTDIR}/src/anVariablePulseSA.o 
+	@${FIXDEPS} "${OBJECTDIR}/src/anVariablePulseSA.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -DPICkit3PlatformTool=1  -fframe-base-loclist  -x c++ -c -mprocessor=$(MP_PROCESSOR_OPTION)  -frtti -fexceptions -fno-check-new -fno-enforce-eh-specs -O1 -MMD -MF "${OBJECTDIR}/src/anVariablePulseSA.o.d" -o ${OBJECTDIR}/src/anVariablePulseSA.o src/anVariablePulseSA.cpp   -DXPRJ_default=$(CND_CONF)  $(COMPARISON_BUILD) 
+	
 else
 ${OBJECTDIR}/src/anSplatterSA.o: src/anSplatterSA.cpp  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}/src" 
@@ -268,6 +280,18 @@ ${OBJECTDIR}/src/anPalmPulseSA.o: src/anPalmPulseSA.cpp  nbproject/Makefile-${CN
 	@${RM} ${OBJECTDIR}/src/anPalmPulseSA.o.d 
 	@${RM} ${OBJECTDIR}/src/anPalmPulseSA.o 
 	@${FIXDEPS} "${OBJECTDIR}/src/anPalmPulseSA.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_CC_PRE)  -g -x c++ -c -mprocessor=$(MP_PROCESSOR_OPTION)  -frtti -fexceptions -fno-check-new -fno-enforce-eh-specs -O1 -MMD -MF "${OBJECTDIR}/src/anPalmPulseSA.o.d" -o ${OBJECTDIR}/src/anPalmPulseSA.o src/anPalmPulseSA.cpp   -DXPRJ_default=$(CND_CONF)  $(COMPARISON_BUILD) 
+	
+${OBJECTDIR}/src/anPalmPulseNoStrobeSA.o: src/anPalmPulseNoStrobeSA.cpp  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/src" 
+	@${RM} ${OBJECTDIR}/src/anPalmPulseNoStrobeSA.o.d 
+	@${RM} ${OBJECTDIR}/src/anPalmPulseNoStrobeSA.o 
+	@${FIXDEPS} "${OBJECTDIR}/src/anPalmPulseNoStrobeSA.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_CC_PRE)  -g -x c++ -c -mprocessor=$(MP_PROCESSOR_OPTION)  -frtti -fexceptions -fno-check-new -fno-enforce-eh-specs -O1 -MMD -MF "${OBJECTDIR}/src/anPalmPulseNoStrobeSA.o.d" -o ${OBJECTDIR}/src/anPalmPulseNoStrobeSA.o src/anPalmPulseNoStrobeSA.cpp   -DXPRJ_default=$(CND_CONF)  $(COMPARISON_BUILD) 
+	
+${OBJECTDIR}/src/anVariablePulseSA.o: src/anVariablePulseSA.cpp  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/src" 
+	@${RM} ${OBJECTDIR}/src/anVariablePulseSA.o.d 
+	@${RM} ${OBJECTDIR}/src/anVariablePulseSA.o 
+	@${FIXDEPS} "${OBJECTDIR}/src/anVariablePulseSA.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_CC_PRE)  -g -x c++ -c -mprocessor=$(MP_PROCESSOR_OPTION)  -frtti -fexceptions -fno-check-new -fno-enforce-eh-specs -O1 -MMD -MF "${OBJECTDIR}/src/anVariablePulseSA.o.d" -o ${OBJECTDIR}/src/anVariablePulseSA.o src/anVariablePulseSA.cpp   -DXPRJ_default=$(CND_CONF)  $(COMPARISON_BUILD) 
 	
 endif
 

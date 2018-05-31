@@ -9,126 +9,138 @@ anPalmStrobe::anPalmStrobe( npDisplay* pDisplay, mode_t mode, int frames, opt_t 
 
 anPalmStrobe::~anPalmStrobe() { }
 
-// STRICTLY FOR TESTING //
 int anPalmStrobe::Draw() {
-    // Main animation loop   
-    const int palmPixels = 20;
-    counter ctrFingers ( 500, ON );
-    counter ctrFingerFade ( 500, ON );
-    counter ctrPalmFade ( 200, ON );
-    counter ctrPalmBlink ( 100, ON );
-    float angle1 = 30;
-    float angle2 = 60;
-    int shiftCount = 0;
-    int palmBlink = 1;
+    counter ctrFingerShift ( 35, ON );
+    counter ctrStrobe ( 20, ON );
+    counter ctrColorFade ( 100, ON );
+    counter ctrPalmFade( 25, ON );    
+    int fingerShiftCount = 0;  
+    int strobe = 0;
+    vector<pixel> fingers;
+    vector<pixel> palm;
     
-    // Init display
-    pixel pinky( coord2d_t { 0, 0 }, rgbwGetByAngle( angle1 ) );
-    pixel ring( coord2d_t { 0, 5 }, rgbwGetByAngle( angle1 ) );
-    pixel middle( coord2d_t { 0, 6 }, rgbwGetByAngle( angle1 ) );
-    pixel index( coord2d_t { 0, 11 }, rgbwGetByAngle( angle1 ) );
+    fingers.push_back( 
+        pixel( 
+            indexPix[ 0 ],
+            rgbwGetByAngle ( fingerAngle ),
+            255 
+        )
+    );     
     
-    pixel palm[palmPixels];
+    fingers.push_back( 
+        pixel( 
+            middlePix[ 0 ],
+            rgbwGetByAngle ( fingerAngle + 5 ),
+            255 
+        )
+    );
     
-    for ( int i = 0; i < palmPixels; i++ ) {            
-        palm[i].color = rgbwGetByAngle( angle2 );
-        palm[i].coord = {0, i+12};
-    }
+    fingers.push_back( 
+        pixel( 
+            ringPix[ 0 ],
+            rgbwGetByAngle ( fingerAngle + 10 ),
+            255 
+        )
+    );
     
-    
-    // RefreshDisplay( FB_CLEAR );
-    
+    fingers.push_back( 
+        pixel( 
+            pinkyPix[ 0 ],
+            rgbwGetByAngle ( fingerAngle + 15 ),
+            255 
+        )
+    );
     
     while ( ( framesDrawn < frames ) || modeFlags.test( MODE_REPEAT ) ) {                      
         if ( CheckAnimSwitch() ) {
             return ( MODE_NEXT );
         }
-                        
-        if ( ret == MODE_PREV || ret == MODE_NEXT ) {
-            break;  // break while loop and return to main signaling next/prev animation to be drawn
-        }  
-
-        if ( ctrFingers.Done() ) {        
-            ctrFingers.Reset();
-
-            shiftCount++;
-
-            if ( shiftCount > 3 ) {                       
-                pinky.coord = { 0, 0 };
-                ring.coord =  { 0, 5 };
-                middle.coord = { 0, 6 };
-                index.coord = { 0, 11 };
-
-                // Fingers
-                Set( pinky.coord.x, pinky.coord.y, rgbwGetByAngle( angle1 ));
-                Set( ring.coord.x, ring.coord.y, rgbwGetByAngle( angle1 + 30 ) );
-                Set( middle.coord.x, middle.coord.y, rgbwGetByAngle( angle1 + 60 ) );
-                Set( index.coord.x, index.coord.y, rgbwGetByAngle( angle1 + 90 ) );                    
-                shiftCount = 0;
-            } 
-
-            if ( (shiftCount > 0) && (shiftCount < 3) ) {
-                pinky.Shift( 0, 1 );
-                ring.Shift( 0, -1 );
-                middle.Shift( 0, 1 );
-                index.Shift( 0, -1 );                                
-                // Fingers
-                Set( pinky.coord.x, pinky.coord.y, rgbwGetByAngle( angle1 ));
-                Set( ring.coord.x, ring.coord.y, rgbwGetByAngle( angle1 + 30 ) );
-                Set( middle.coord.x, middle.coord.y, rgbwGetByAngle( angle1 + 60 ) );
-                Set( index.coord.x, index.coord.y, rgbwGetByAngle( angle1 + 90 ) );
-            }
-
-            if ( shiftCount == 3 ) {
-                Set( pinky.coord.x, pinky.coord.y, rgbw_t {0, 0, 0, 0} );
-                Set( ring.coord.x, ring.coord.y, rgbw_t {0, 0, 0, 0} );
-                Set( middle.coord.x, middle.coord.y, rgbw_t {0, 0, 0, 0} );
-                Set( index.coord.x, index.coord.y, rgbw_t {0, 0, 0, 0} );                    
-            }
-
-            RefreshDisplay( FB_CLEAR );                
+        
+        if ( ctrStrobe.Done() ) {
+                ctrStrobe.Reset();
+                strobe ^= 1;
         }
-
-
-        if ( ctrFingerFade.Done() ) {
-            ctrFingerFade.Reset();
-            if ( ( angle1 += 5.0f )  > 360 ) { 
-                angle1 -= 360;
-
-                // RefreshDisplay( FB_CLEAR );
-            }
+        
+        if ( ctrColorFade.Done() ) {
+            ctrColorFade.Reset();            
+            fingerAngle += 5.0;
         }
-
-        if ( ctrPalmFade.Done() ) {
+        
+        if ( ctrPalmFade.Done () ) {
+            palm.clear();
             ctrPalmFade.Reset();
-            if ( ( angle2 += 1.0f ) > 360 ) { 
-                angle2 -= 360;
-
-               // RefreshDisplay( FB_CLEAR );
+            palmAngle += 4.0;
+            
+            for ( int i = 12; i < 31; ++i ) {
+                palm.push_back( 
+                    pixel( 
+                        coord2d_t { 0, i },
+                        rgbwGetByAngle ( palmAngle + (i - 12) * 2.0 ),
+                        200 
+                    )
+                );     
             }
         }
-
-        if ( ctrPalmBlink.Done() ) {
-            ctrPalmBlink.Reset();
-            if ( palmBlink ) {
-                for ( int i = 0; i < palmPixels; i++ ) {
-                    Set( palm[i].coord.x, palm[i].coord.y, rgbw_t { 0, 0, 0, 0 } );
-                }
-                palmBlink = 0;
+                    
+        if ( ctrFingerShift.Done() ) {
+            ctrFingerShift.Reset();
+            fingers.clear();            
+            
+            if ( ++fingerShiftCount > 3 ) {
+                fingerShiftCount = 0;                
             } 
+            
+            if ( fingerShiftCount < 3 ) { 
+                fingers.push_back( 
+                    pixel( 
+                        indexPix[ fingerShiftCount ],
+                        rgbwGetByAngle ( fingerAngle ),
+                        255 
+                    )
+                    );     
+    
+                fingers.push_back( 
+                    pixel( 
+                        middlePix[ fingerShiftCount ],
+                        rgbwGetByAngle ( fingerAngle + 20 ),
+                        255 
+                    )
+                );
 
-            else {
-                for ( int i = 0; i < palmPixels; i++ ) {
-                    Set( palm[i].coord.x, palm[i].coord.y, rgbwGetByAngle( angle2 + (i*4) ) );
-                }
-                palmBlink = 1;
+                fingers.push_back( 
+                    pixel( 
+                        ringPix[ fingerShiftCount ],
+                        rgbwGetByAngle ( fingerAngle + 40 ),
+                        255 
+                    )
+                );
+
+                fingers.push_back( 
+                    pixel( 
+                        pinkyPix[ fingerShiftCount ],
+                        rgbwGetByAngle ( fingerAngle + 60 ),
+                        255 
+                    )
+                );
             }
-
-            RefreshDisplay( FB_BLEND );                                
-        } 
             
             
-
+        }
+        if ( !strobe ) {
+            Blit( fingers );
+            Blit( palm );
+        }        
+        
+        if ( palmAngle > 360 ) {
+            palmAngle -= 360;        
+        }
+        
+        if ( fingerAngle > 360 ) {
+            fingerAngle -= 360;
+        }
+    
+        RefreshDisplay( FB_CLEAR );
+            
     } // end main loop         
     
     return ( MODE_NEXT );

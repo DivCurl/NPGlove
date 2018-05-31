@@ -21,6 +21,8 @@
         <itemPath>src/include/vector.h</itemPath>
         <itemPath>src/include/anPalmStrobe.h</itemPath>
         <itemPath>src/include/anPalmPulseSA.h</itemPath>
+        <itemPath>src/include/anPalmPulseNoStrobeSA.h</itemPath>
+        <itemPath>src/include/anVariablePulseSA.h</itemPath>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
@@ -44,6 +46,8 @@
         <itemPath>src/pixel.cpp</itemPath>
         <itemPath>src/anPalmStrobe.cpp</itemPath>
         <itemPath>src/anPalmPulseSA.cpp</itemPath>
+        <itemPath>src/anPalmPulseNoStrobeSA.cpp</itemPath>
+        <itemPath>src/anVariablePulseSA.cpp</itemPath>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"

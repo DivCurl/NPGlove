@@ -48,17 +48,17 @@ int main() {
             
     npAnimation* pAnim;
     npDisplay display( RGBW );   
-    display.SetBrightness( 200 );
+    display.SetBrightness( 230 );
     display.AddNeopixel( 32, &LATBSET, &LATBCLR, &TRISB, portPin[ 2 ] );   
     
     srand( ReadADC10( 0 ) ); 
 
     int currAnim = 1;
     
-    // currAnim = ID_AN_PALM_STROBE;        
-        currAnim = ID_AN_SPLATTER_SA; // works
+    currAnim = ID_AN_PALM_STROBE;        
+    // currAnim = ID_AN_SPLATTER_SA; // works
     // currAnim = ID_AN_PALM_PULSE_SA;  // Works
-
+    
     while ( 1 ) { 
         if ( currAnim == ID_AN_NULL ) {
             currAnim = ID_AN_MAX - 1;
@@ -93,7 +93,7 @@ int main() {
                 }
                 
                 delete pAnim;
-                break;
+                break;                          
                 
             case ( ID_AN_PALM_PULSE_SA ):
                 pAnim = new anPalmPulseSA( &display, MODE_REPEAT );
@@ -108,8 +108,34 @@ int main() {
                 delete pAnim;
                 break;
                 
+            case ( ID_AN_PALM_PULSE_NO_STROBE_SA ):
+                pAnim = new anPalmPulseNoStrobeSA( &display, MODE_REPEAT );
+                
+                if ( pAnim->Draw() == MODE_PREV ) {
+                    currAnim--;
+                } 
+                else if ( pAnim->Draw() == MODE_NEXT ) {
+                    currAnim++;
+                }
+                
+                delete pAnim;
+                break;
+                
             case ( ID_AN_SPLATTER_SA ):
                 pAnim = new anSplatterSA( &display, MODE_REPEAT );
+                
+                if ( pAnim->Draw() == MODE_PREV ) {
+                    currAnim--;
+                } 
+                else if ( pAnim->Draw() == MODE_NEXT ) {
+                    currAnim++;
+                }
+                
+                delete pAnim;
+                break;
+                
+            case ( ID_AN_VAR_PULSE_SA ):
+                pAnim = new anVariablePulseSA( &display, MODE_REPEAT );
                 
                 if ( pAnim->Draw() == MODE_PREV ) {
                     currAnim--;
@@ -154,7 +180,8 @@ void __ISR ( _TIMER_4_VECTOR, IPL7AUTO ) TMR4IntHandler( void ) {
     if ( analyzerRun ) {               
         int16_t s = ReadADC10( 0 );
         // some very basic noise rejection before storing sample   
-        sampleBuffer[ sampleIndex ].re = ( s > ( ADC_COUNT_BIAS - ADC_COUNT_NOISE ) ) && ( s < ( ADC_COUNT_BIAS + ADC_COUNT_NOISE ) ) ? 0 : s - ADC_COUNT_ZERO ;
+        // sampleBuffer[ sampleIndex ].re = ( s > ( ADC_COUNT_BIAS - ADC_COUNT_NOISE ) ) && ( s < ( ADC_COUNT_BIAS + ADC_COUNT_NOISE ) ) ? 0 : s - ADC_COUNT_ZERO ;
+        sampleBuffer[ sampleIndex ].re = s;
         sampleBuffer[ sampleIndex ].im = 0;
         
         if ( sampleIndex == ( N - 1 ) ) {

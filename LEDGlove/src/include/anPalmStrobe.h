@@ -13,8 +13,8 @@ public:
         
 private:
     hsv_t h_color;
-    sprite index, middle, ring, pinky, palm;    
-    float angle;    
+    // sprite index, middle, ring, pinky, palm;    
+    float fingerAngle, palmAngle = 0.f;    
     int step;       
 };
 
